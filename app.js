@@ -62,7 +62,7 @@ $(function () {
                 let template = '';
                 tasks.forEach(task=>{
                     template += `
-                        <tr>
+                        <tr taskId="${task.id}">
                             <td>${task.id}</td>
                             <td>${task.name}</td>
                             <td>${task.description}</td>
@@ -77,6 +77,13 @@ $(function () {
 
     /* Botón eliminar de la tabla */
     $(document).on('click', '.task-delete', function () {
-        console.log('Click');
+        /* this = elemnto html, posicion 0 = button */
+        /* parentElement propiedad js = devuelve el elemento principal */
+        let element = $(this)[0].parentElement.parentElement;
+        let id = $(element).attr('taskId');
+        //console.log(id);
+        $.post('task-delete.php', {id}, function (response) {            
+            fetchTasks();
+        });
     })
 })
