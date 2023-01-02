@@ -4,6 +4,9 @@ $(function () {
     /* Carga de datos en la tabla */
     $('#task-result').hide();
     fetchTasks();
+
+    /* Flag Editar */
+    let edit = false;
     
     /*Capturamos el elemento con id=search */
     /*keyup = método de tipeo (cuando el usuario presiona una tecla) */
@@ -39,7 +42,11 @@ $(function () {
             description: $('#description').val()
         };
         
-        $.post('task-add.php', postData, function (response) {
+        /* Si edit es falso, el formulario sigue su curso normal, guardar datos 
+        Si edit es verdadero, el formulario entra en edición, actualizar datos. */
+        let url = edit === false ? 'task-add.php' : 'task-edit.php';
+        
+        $.post(url, postData, function (response) {
             /* Recargamos la tabla */
             fetchTasks();
 
@@ -64,7 +71,7 @@ $(function () {
                     template += `
                         <tr taskId="${task.id}">
                             <td>${task.id}</td>
-                            <td>${task.name}</td>
+                            <td><a href="#" class="task-item">${task.name}</a></td>
                             <td>${task.description}</td>
                             <td><button class="btn btn-danger task-delete">Delete</button></td>
                         </tr>
@@ -87,5 +94,20 @@ $(function () {
                 fetchTasks();
             });
         }
-    })
+    });
+
+    /* Editar información */
+    $(document).on('click', '.task-item', function () {
+        let element = $(this)[0].parentElement.parentElement;
+        let id = $(element).attr('taskId');
+        /* Enviamos el id al backend */
+        $.post('task-single.php', {id}, function (response) {            
+            //console.log(response);
+            const task = JSON.parse(response);
+            $('#name').val(task.name);
+            $('#description').val(task.description);
+            edit = true;      
+        });
+    });
+
 })
