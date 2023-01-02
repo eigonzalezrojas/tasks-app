@@ -77,13 +77,15 @@ $(function () {
 
     /* Botón eliminar de la tabla */
     $(document).on('click', '.task-delete', function () {
-        /* this = elemnto html, posicion 0 = button */
-        /* parentElement propiedad js = devuelve el elemento principal */
-        let element = $(this)[0].parentElement.parentElement;
-        let id = $(element).attr('taskId');
-        //console.log(id);
-        $.post('task-delete.php', {id}, function (response) {            
-            fetchTasks();
-        });
+        if (confirm('Are you sure you want to delete it')) {
+            /* this = elemnto html, posicion 0 = button */
+            /* parentElement propiedad js = devuelve el elemento principal */
+            let element = $(this)[0].parentElement.parentElement;
+            let id = $(element).attr('taskId');
+            //console.log(id);
+            $.post('task-delete.php', {id}, function (response) {            
+                fetchTasks();
+            });
+        }
     })
 })
