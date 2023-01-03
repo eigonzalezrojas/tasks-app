@@ -39,15 +39,18 @@ $(function () {
     $('#task-form').submit(function (e) {
         const postData={
             name: $('#name').val(),
-            description: $('#description').val()
+            description: $('#description').val(),
+            id: $('#taskId').val()
         };
         
         /* Si edit es falso, el formulario sigue su curso normal, guardar datos 
         Si edit es verdadero, el formulario entra en edición, actualizar datos. */
         let url = edit === false ? 'task-add.php' : 'task-edit.php';
+        console.log(url);
         
         $.post(url, postData, function (response) {
             /* Recargamos la tabla */
+            console.log(response);
             fetchTasks();
 
             /* Resetear valores del formulario */
@@ -106,6 +109,7 @@ $(function () {
             const task = JSON.parse(response);
             $('#name').val(task.name);
             $('#description').val(task.description);
+            $('#taskId').val(task.id);
             edit = true;      
         });
     });
